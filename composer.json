@@ -1,0 +1,20 @@
+{
+    "name": "happy-types/money-type",
+    "type": "library",
+    "description": "Money library implements Money Value Object which contains amount and currency in the same object.",
+    "keywords": ["Money", "Quantity", "Money Convert"],
+    "homepage": "https://github.com/antanas-arvasevicius/php-money-type",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Antanas Arvasevicius",
+            "email": "antanas.arvasevicius@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "psr-4": { "": "src/" }
+    }
+}
