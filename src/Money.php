@@ -146,7 +146,7 @@ class Money
      * You can pass amount as one of (int, float, double) and it will be converted to string.
      * Better use static method create() and pass only a string.
      *
-     * @param string $amount
+     * @param string|integer|null $amount
      * @param string $currency
      * @param        $precision
      *
