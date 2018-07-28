@@ -201,7 +201,7 @@ class Money
     /**
      * @param string $currency
      * @param $precision
-     * @return Money|null
+     * @return Money
      */
     public static function undefined($currency = '', $precision = -1)
     {
