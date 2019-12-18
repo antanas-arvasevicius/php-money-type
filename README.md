@@ -6,13 +6,13 @@ Without **Money** object you must store these values in separate variables like 
 Its really hard to produce nice API methods without money object.
 
  Example:
- ```
+ ```php
  function getPrice()
  ```
 
  Should it return value or object ?
 
- ```
+ ```php
  function getPrice()
  {
     return array($price, $value);
@@ -21,7 +21,7 @@ Its really hard to produce nice API methods without money object.
 
  or better?
 
- ```
+ ```php
  function getPrice()
  {
     return Money::create($price, $value);
@@ -30,19 +30,19 @@ Its really hard to produce nice API methods without money object.
 
 now you can apply some mathematics to money object:
 
-```
+```php
 getPrice()->add(Money::create('10.00', 'LTL'))
 ```
 
 or add and convert to some currency in same time
 
-```
+```php
 $priceInUsd = getPrice()->add(Money::create('10.00', 'LTL'))->convertTo('USD')
 ```
 
 or with mutiple currencies ? wha?
 
-```
+```php
 $sum = Money::create('10.00', 'LTL')->add(Money::create('5.00', 'USD'))
 
 echo $sum->asString(); // 24.0000 LTL
@@ -50,7 +50,7 @@ echo $sum->asString(); // 24.0000 LTL
 
 comparing moneys with different currencies ?
 
-```
+```php
 Money::create('10.00', 'LTL')->compare(Money::create('100.00', 'RUB'));
 ```
 
