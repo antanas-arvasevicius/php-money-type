@@ -1,4 +1,10 @@
 <?php
+
+namespace HappyTypes\Test\MoneyType;
+
+use HappyTypes\MoneyConverter;
+use RuntimeException;
+
 class MockedMoneyConverter implements MoneyConverter
 {
     private $currencies = array(

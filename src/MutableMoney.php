@@ -1,4 +1,7 @@
 <?php
+
+namespace HappyTypes;
+
 /**
  * Class MutableMoney
  *
@@ -10,7 +13,6 @@
  */
 class MutableMoney extends Money
 {
-
     /**
      * Static factory method will always create an new instance for MutableMoney
      * @param string $currency
@@ -92,5 +94,4 @@ class MutableMoney extends Money
             $this->getCurrency() === $money->getCurrency() &&
             ($precision < 0 ? $this->getPrecision() === $money->getPrecision() : true));
     }
-
 }

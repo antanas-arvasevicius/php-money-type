@@ -1,4 +1,7 @@
 <?php
+
+namespace HappyTypes;
+
 /**
  * Interface MoneyConverter
  * Implement this interface if you want your Money object would support money conversion with method convertTo(..)
