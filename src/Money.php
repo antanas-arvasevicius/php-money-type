@@ -1,4 +1,9 @@
 <?php
+
+namespace HappyTypes;
+
+use RuntimeException;
+
 /**
  * Class Money is a Value Object, that means that all operations will create new instance of Money
  * and all instances are immutable
@@ -47,7 +52,6 @@
  */
 class Money
 {
-
     /**
      * @var string
      */
@@ -91,7 +95,7 @@ class Money
      */
     private static $defaultCurrency = null;
 
-    function __construct($amount, $currency, $precision = -1)
+    public function __construct($amount, $currency, $precision = -1)
     {
         if ($amount && !is_string($amount))
             throw new RuntimeException("Money: `amount` argument must be string value. you passed: " . gettype($amount));
@@ -192,7 +196,6 @@ class Money
         return ($value === '' || $value === null || $value === false);
     }
 
-
     /**
      * @var array|Money[]
      */
@@ -207,7 +210,6 @@ class Money
     {
         return new Money(null, $currency, $precision);
     }
-
 
     /**
      * Method adds money amount to current money instance.
@@ -234,7 +236,8 @@ class Money
      * @param $number
      * @return Money
      */
-    public function multiplyByInteger($number) {
+    public function multiplyByInteger($number)
+    {
         if (!is_int($number))
             throw new RuntimeException("Money: cannot multiply money by " . $number . ". Only integer value is acceptable.");
 
@@ -482,7 +485,6 @@ class Money
         return $this->precision;
     }
 
-
     /**
      * Method returns format string of current value in format "{amount} {currency}" (e.g. 4.29 LTL)
      * @return string
@@ -491,5 +493,4 @@ class Money
     {
         return $this->undefined ? "undefined {$this->currency}" : "{$this->amount} {$this->currency}";
     }
-
 }

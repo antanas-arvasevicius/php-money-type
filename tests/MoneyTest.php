@@ -1,10 +1,13 @@
 <?php
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'MockedMoneyConverter.php');
 
-class MoneyTest extends PHPUnit_Framework_TestCase
+namespace HappyTypes\Test\MoneyType;
+
+use HappyTypes\Money;
+use PHPUnit\Framework\TestCase;
+
+class MoneyTest extends TestCase
 {
-
-    public function setUp()
+    protected function setUp()
     {
         Money::setDefaultMoneyConverter(new MockedMoneyConverter());
         Money::setDefaultCurrency(null);
@@ -82,10 +85,9 @@ class MoneyTest extends PHPUnit_Framework_TestCase
         $result       = $a->isDefined();
         $resultNegate = $a->isUndefined();
 
-        $this->assertFalse($result === $resultNegate, "Test A.isDefined() A.isUndefined() failed, must return opposite values.");
-        $this->assertTrue($result == $expectedResult, 'Test A.isDefined() failed. got: ' . ($result ? 'true' : 'false') . ', expected: ' . ($expectedResult ? 'true' : 'false'));
+        $this->assertNotSame($result, $resultNegate, "Test A.isDefined() A.isUndefined() failed, must return opposite values.");
+        $this->assertEquals($expectedResult, $result, 'Test A.isDefined() failed. got: ' . ($result ? 'true' : 'false') . ', expected: ' . ($expectedResult ? 'true' : 'false'));
     }
-
 
     /**
      * You cannot create money object from integer or float or double, only from string!
@@ -177,13 +179,11 @@ class MoneyTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->isEqual($expectedResult), 'Test A - B failed. ' . $a->asString() . ' - ' . $b->asString() . ' = ' . $result->asString() . ', expected: ' . $expectedResult->asString());
     }
 
-
     /**
      * If currencies mismatch in  a + b  then we implicitly convert  b into's a currency. returned value is in a`s currency
      */
     public function testAddCurrencyMismatch()
     {
-
         $a = Money::create('0.00', 'LTL');
         $b = Money::create('1.00', 'EUR');
 
@@ -271,7 +271,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testComparison(Money $a, Money $b, $result)
     {
         $r = $a->compare($b);
-        $this->assertTrue($r == $result, "comparing: " . $a->asString() . " <=> " . $b->asString() . ", result: " . $r . ", expected: " . $result);
+        $this->assertEquals($result, $r, "comparing: " . $a->asString() . " <=> " . $b->asString() . ", result: " . $r . ", expected: " . $result);
     }
 
     public function provider_testComparisionEqualityWithConversion()
@@ -290,7 +290,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     {
         $b = $a->convertTo('LTL');
         $r = $a->compare($b);
-        $this->assertTrue($r == 0, "comparing: " . $a->asString() . " <=> " . $b->asString() . ", result: " . $r . ", expected: 0");
+        $this->assertEquals(0, $r, "comparing: " . $a->asString() . " <=> " . $b->asString() . ", result: " . $r . ", expected: 0");
     }
 
     /**
@@ -301,20 +301,19 @@ class MoneyTest extends PHPUnit_Framework_TestCase
         $method = ($result == 0) ? 'eq' : ($result < 0 ? 'lt' : 'gt');
 
         $r = $a->{$method}($b);
-        $this->assertTrue($r == true, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
+        $this->assertTrue($r, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
 
         if ($result == 0) {
 
             $r      = $a->le($b);
             $method = 'le';
-            $this->assertTrue($r == true, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
+            $this->assertTrue($r, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
 
             $r      = $a->ge($b);
             $method = 'ge';
-            $this->assertTrue($r == true, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
+            $this->assertTrue($r, "comparing using method `{$method}`: " . $a->asString() . " {$method} " . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: true");
         }
     }
-
 
     public function provider_testComparisonOfIllegalUsage()
     {
@@ -341,7 +340,6 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     {
         $r = $a->compare($b);
     }
-
 
     public function provider_testCompareToZero()
     {
@@ -377,7 +375,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testCompareToZero(Money $a, $result)
     {
         $r = $a->compareToZero();
-        $this->assertTrue($r == $result, "comparing to zero: " . $a->asString() . ", result: " . $r . ", expected: " . $result);
+        $this->assertEquals($result, $r, "comparing to zero: " . $a->asString() . ", result: " . $r . ", expected: " . $result);
     }
 
     public function provider_testIsZero()
@@ -414,7 +412,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testIsZero(Money $a, $result)
     {
         $r = $a->isZero();
-        $this->assertTrue($r == $result, "comparing to zero: " . $a->asString() . ", result: " . $r . ", expected: " . $result);
+        $this->assertEquals($result, $r, "comparing to zero: " . $a->asString() . ", result: " . $r . ", expected: " . $result);
     }
 
     public function provider_testIsEqual()
@@ -448,7 +446,7 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testIsEqual(Money $a, Money $b, $result)
     {
         $r = $a->isEqual($b);
-        $this->assertTrue($r == $result, "isEqual: " . $a->asString() . ' == ' . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: " . ($result ? 'true' : 'false'));
+        $this->assertEquals($result, $r, "isEqual: " . $a->asString() . ' == ' . $b->asString() . ", result: " . ($r ? 'true' : 'false') . ", expected: " . ($result ? 'true' : 'false'));
     }
 
     public function provider_testIsEqualExact()
@@ -481,18 +479,17 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testIsEqualExact(Money $a, Money $b, $result)
     {
         $r = $a->isEqualExact($b);
-        $this->assertTrue($r == $result, "isEqualExact: " . $a->asString() . ' === ' . $b->asString() . ", result: " . $r . ", expected: " . $result);
+        $this->assertEquals($result, $r, "isEqualExact: " . $a->asString() . ' === ' . $b->asString() . ", result: " . $r . ", expected: " . $result);
     }
 
     public function testGetters()
     {
         $a = Money::create('5.43210', 'LTL', 5);
-        $this->assertTrue($a->getAmount() === '5.43210', "getter test failed: incorrect getAmount();");
-        $this->assertTrue($a->getCurrency() === 'LTL', "getter test failed: incorrect getCurrency();");
-        $this->assertTrue($a->getPrecision() === 5, "getter test failed: incorrect getPrecision();");
-        $this->assertTrue($a->asString() === '5.43210 LTL', "getter test failed: incorrect asString(); returned: " . $a->asString() . ", should: 5.43210 LTL");
+        $this->assertSame('5.43210', $a->getAmount(), "getter test failed: incorrect getAmount();");
+        $this->assertSame('LTL', $a->getCurrency(), "getter test failed: incorrect getCurrency();");
+        $this->assertSame(5, $a->getPrecision(), "getter test failed: incorrect getPrecision();");
+        $this->assertSame('5.43210 LTL', $a->asString(), "getter test failed: incorrect asString(); returned: " . $a->asString() . ", should: 5.43210 LTL");
     }
-
 
     public function provider_testNegate()
     {
@@ -542,9 +539,10 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     public function testUndefined($currency, $precision)
     {
         $money = Money::undefined($currency, $precision);
+        $precision = $precision >= 0 ? $precision : 4;
 
         $this->assertEquals($currency, $money->getCurrency(), "currency not match");
-        $this->assertEquals($precision >= 0 ? $precision : 4, $money->getPrecision(), "precision not match");
+        $this->assertEquals($precision, $money->getPrecision(), "precision not match");
     }
 
     public function testSetDefaultCurrency()
@@ -560,17 +558,18 @@ class MoneyTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($defautCurrency, $money->getCurrency(), "money() created not correct currency value = ".$money->asString());
     }
 
-
     public function assertMoney(Money $money, $amount, $currency, $precision = 0)
     {
-        $this->assertTrue($money->getAmount() == $amount, "amount mismatch. must be {$amount}, got: " . $money->getAmount());
-        $this->assertTrue($money->getCurrency() == $currency, "currency mismatch. must be {$currency}, got: " . $money->getCurrency());
+        $this->assertEquals($amount, $money->getAmount(), "amount mismatch. must be {$amount}, got: " . $money->getAmount());
+        $this->assertEquals($currency, $money->getCurrency(), "currency mismatch. must be {$currency}, got: " . $money->getCurrency());
 
-        if ($precision)
-            $this->assertTrue($money->getPrecision() == $precision, "precision mismatch. must be {$precision}, got: " . $money->getPrecision());
+        if ($precision) {
+            $this->assertEquals($precision, $money->getPrecision(), "precision mismatch. must be {$precision}, got: " . $money->getPrecision());
+        }
     }
 
-    public function provider_testMultiplyByInteger() {
+    public function provider_testMultiplyByInteger()
+    {
         return array(
             array(Money::create('0.00', ''), 5, Money::create('0.00', '')),
             array(Money::create('15.63', 'LTL'), 5, Money::create('78.15', 'LTL')),
@@ -582,7 +581,8 @@ class MoneyTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider provider_testMultiplyByInteger
      */
-    public function testMultiplyByInteger(Money $money, $number, Money $expectedResult) {
+    public function testMultiplyByInteger(Money $money, $number, Money $expectedResult)
+    {
         $result = $money->multiplyByInteger($number);
         $this->assertTrue($result->isEqual($expectedResult), 'Test money * number failed. (' . $money->asString() . ') * (' . $result->asString() . '), expected: ' . $expectedResult->asString());
     }

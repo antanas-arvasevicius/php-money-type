@@ -1,10 +1,14 @@
 <?php
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'MockedMoneyConverter.php');
 
-class MutableMoneyTest extends PHPUnit_Framework_TestCase
+namespace HappyTypes\Test\MoneyType;
+
+use HappyTypes\Money;
+use HappyTypes\MutableMoney;
+use PHPUnit\Framework\TestCase;
+
+class MutableMoneyTest extends TestCase
 {
-
-    public function setUp()
+    protected function setUp()
     {
         Money::setDefaultMoneyConverter(new MockedMoneyConverter());
         Money::setDefaultCurrency(null);
@@ -13,7 +17,6 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
     public function provider_testAdd()
     {
         return array(
-
 
             array(MutableMoney::create('0.00', 'LTL'), Money::create('0.00', 'LTL'), Money::create('0.00', 'LTL')),
 
@@ -73,7 +76,6 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result->isEqual($expectedResult), 'Test A - B failed. ' . $a->asString() . ' - ' . $b->asString() . ' = ' . $result->asString() . ', expected: ' . $expectedResult->asString());
     }
 
-
     public function testConvertTo()
     {
         $a        = MutableMoney::create('2.00', 'EUR');
@@ -112,7 +114,6 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($b->isEqualExact($result), "negate() incorrectly, " . $original->asString() . ".negate() result: " . $b->asString() . ", should be: " . $result->asString());
     }
 
-
     public function testImmutable()
     {
         $a = MutableMoney::create('20.00', 'LTL');
@@ -123,7 +124,7 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
 
         $adding = Money::create('1.00', 'LTL');
 
-        $value = $immutable->add($adding);
+        $immutable->add($adding);
 
         $this->assertTrue($immutable->isEqualExact($a), "immutable(): adding to immutable value must not change its state. (immutable)" . $immutable->asString() . " + " . $adding->asString() . " => " . $immutable->asString());
     }
@@ -159,7 +160,7 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
     {
         $original = MutableMoney::from($a);
         $r        = $a->isEqualExact($b);
-        $this->assertTrue($r == $result, "isEqualExact: " . $a->asString() . ' === ' . $b->asString() . ", result: " . $r . ", expected: " . $result);
+        $this->assertEquals($r, $result, "isEqualExact: " . $a->asString() . ' === ' . $b->asString() . ", result: " . $r . ", expected: " . $result);
         $this->assertTrue($original->isEqualExact($a), "isEqualExact: failed. mutable money object value was changed due function call! isEqualExact cannot change values itself.");
     }
 
@@ -174,7 +175,6 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
         $expected = Money::create('123.45', 'LTL', 2);
         $this->assertTrue($expected->isEqualExact($a), $input->asString() . " applied toPrecision(2) and got result ".$a->asString().", expected: ".$expected->asString());
     }
-
 
     public function provider_testUndefinedBugWhenCreatingMultipleValuesWithDifferentCurrencies()
     {
@@ -195,24 +195,22 @@ class MutableMoneyTest extends PHPUnit_Framework_TestCase
     public function testUndefined($currency, $precision)
     {
         $money = Money::undefined($currency, $precision);
+        $precision = $precision >= 0 ? $precision : 4;
 
         $this->assertEquals($currency, $money->getCurrency(), "currency not match");
-        $this->assertEquals($precision >= 0 ? $precision : 4, $money->getPrecision(), "precision not match");
+        $this->assertEquals($precision, $money->getPrecision(), "precision not match");
     }
-
 
     public function testSetDefaultCurrency()
     {
-        $defautCurrency = 'EUR';
+        $defaultCurrency = 'EUR';
 
-        Money::setDefaultCurrency($defautCurrency);
+        Money::setDefaultCurrency($defaultCurrency);
 
         $undefined = Money::undefined();
         $money = Money::create('10.0000');
 
-        $this->assertEquals($defautCurrency, $undefined->getCurrency(), "undefined() created not correct currency value");
-        $this->assertEquals($defautCurrency, $money->getCurrency(), "money() created not correct currency value = ".$money->asString());
+        $this->assertEquals($defaultCurrency, $undefined->getCurrency(), "undefined() created not correct currency value");
+        $this->assertEquals($defaultCurrency, $money->getCurrency(), "money() created not correct currency value = ".$money->asString());
     }
-
-
 }
